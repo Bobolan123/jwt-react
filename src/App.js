@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.scss';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Navigate from './components/Nav/Nav.js';
+import News from "./components/News.js";
+import About from "./components/About.js";
+import Contact from "./components/Contact.js";
+import UserLogin from "./components/Login/Login.js";
+import Home from "./components/Home.js";
+
+const router = createBrowserRouter([
+  { 
+    path: "/",
+    element: <Navigate></Navigate>,
+    children: [
+      {
+        path: "", 
+        element: <Home />,
+      },
+      {
+        path: "news", 
+        element: <News />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "about",
+        element: <News />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <UserLogin  />,
+  }
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello world React with Hoi Dan IT
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app-container'>
+      <RouterProvider router={router} />
+      
     </div>
   );
 }
