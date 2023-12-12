@@ -1,7 +1,11 @@
 import './Login.scss'
+import { Link } from 'react-router-dom'
 
 const UserLogin = (props) => {
-    
+    const handleCreateNewAccount = () => {
+        window.location.href="/register"
+    }
+
     return (
         <div className="login-container">
             <div className="container">
@@ -24,7 +28,9 @@ const UserLogin = (props) => {
                         <span className='text-center'><a href='#' className='forget-password'>Forgot your password?</a></span>
                         <hr/>
                         <div className='text-center'>
-                            <button className="btn btn-success">Create new account</button>
+                            <button className="btn btn-success" onClick={handleCreateNewAccount}>
+                                Create new account
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import About from "./components/About.js";
 import Contact from "./components/Contact.js";
 import UserLogin from "./components/Login/Login.js";
 import Home from "./components/Home.js";
+import Register from "./components/register/Register.js";
 
 const router = createBrowserRouter([
   { 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <UserLogin  />,
+  },
+  {
+    path: "/register",
+    element: <Register  />,
   }
 ]);
 
