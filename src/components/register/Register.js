@@ -1,11 +1,58 @@
 import './Register.scss'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = (props) => {
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [userName, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+
     const handleLogin = () => {
         window.location.href="/login"
     }
 
+    useEffect(() => {
+        // axios.get("http://localhost:3001/api/test-api").then(data => {
+        //     console.log("Check data >>>", data)
+        // })
+
+    }, [])
+
+    const isValidInput = () => {
+        if (!email) {
+            toast.error("email is required")
+            return false
+        }
+        if (!phone) {
+            toast.error("phone is required")
+            return false
+        }
+        if (!password) {
+            toast.error("password is required")
+            return false
+        }
+        if (password != confirmPassword) {
+            toast.error("password is not the same")
+            return false
+        }
+        var re = /\S+@\S+\.\S+/;
+        if (!re.test(email)) {
+            toast.error("email invalid")
+            return false
+        }
+        return true
+    }
+
+    const handleRegister = () => {
+        toast.success("wow so easy")
+        let check = isValidInput()
+        let userData = {email,phone,userName,password, confirmPassword}
+        console.log(userData)
+    }
     return (
         <div className="register-container">
             <div className="container">
@@ -24,27 +71,37 @@ const Register = (props) => {
                         </div>
                         <div className='form-group'>
                             <label>Email:</label>
-                            <input type='text' className='form-control' placeholder='Email or phone number'/>
+                            <input type='text' className='form-control'         placeholder='Email address' 
+                                value={email} onChange={(event) => setEmail(event.target.value)}
+                            />
                         </div>
                         <div className='form-group'>
                             <label>Phone number:</label>
-                            <input type='text' className='form-control' placeholder=' Phone number'/>
+                            <input type='text' className='form-control' placeholder=' Phone number'
+                                value={phone} onChange={(event) => setPhone(event.target.value)}
+                            />
                         </div>
                         <div className='form-group'>
                             <label>User name:</label>
-                            <input type='text' className='form-control' placeholder=' User name'/>
+                            <input type='text' className='form-control' placeholder=' User name'
+                                value={userName} onChange={(event) => setUsername(event.target.value)}
+                            />
                         </div>
                         <div className='form-group'>
                             <label>Password:</label>
-                            <input type='password' className='form-control' placeholder='Password'/>
+                            <input type='password' className='form-control' placeholder='Password'
+                                value={password} onChange={(event) => setPassword(event.target.value)}
+                            />
                         </div>
                         <div className='form-group'>
                             <label>Re-enter Password:</label>
-                            <input type='password' className='form-control' placeholder='Re-enter Password'/>
+                            <input type='password' className='form-control' placeholder='Re-enter Password'
+                                value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
+                            />
                         </div>
                        
                         
-                        <button className='btn btn-primary btn-lg'>Register</button>
+                        <button className='btn btn-primary btn-lg' onClick={handleRegister}>Register</button>
 
                         <hr/>
                         <div className='text-center'>

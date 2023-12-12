@@ -1,24 +1,25 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Navigate from './components/Nav/Nav.js';
+import Navigate from "./components/Nav/Nav.js";
 import News from "./components/News.js";
 import About from "./components/About.js";
 import Contact from "./components/Contact.js";
 import UserLogin from "./components/Login/Login.js";
 import Home from "./components/Home.js";
 import Register from "./components/register/Register.js";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
-  { 
+  {
     path: "/",
     element: <Navigate></Navigate>,
     children: [
       {
-        path: "", 
+        path: "",
         element: <Home />,
       },
       {
-        path: "news", 
+        path: "news",
         element: <News />,
       },
       {
@@ -33,19 +34,31 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <UserLogin  />,
+    element: <UserLogin />,
   },
   {
     path: "/register",
-    element: <Register  />,
-  }
+    element: <Register />,
+  },
 ]);
 
 function App() {
   return (
-    <div className='app-container'>
+    <div className="app-container">
       <RouterProvider router={router} />
-      
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
