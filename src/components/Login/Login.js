@@ -29,7 +29,21 @@ const UserLogin = (props) => {
             return
         } 
 
-        await loginUser(valLogin, password)
+        let response = await loginUser(valLogin, password)
+        if (response && response.data && +response.data.EC === 0) {
+            let data = {
+                isAuthenticated:true,
+                token: "fake token"
+            }
+            sessionStorage.setItem("account", JSON.stringify(data));
+            //success
+            window.location.href="/users"
+
+        }
+        if (response && response.data && +response.data.EC !== 0) {
+            //success
+            toast.error(response.data.EM)
+        }
   }
   return (
     <div className="login-container">
