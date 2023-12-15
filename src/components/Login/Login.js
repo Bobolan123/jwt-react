@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Login.scss";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 
 const UserLogin = (props) => {
+    useEffect(() => {
+      let session = sessionStorage.getItem("account");
+      if (session) {
+        window.location.href="/users"
+      }
+    }, [])
   const handleCreateNewAccount = () => {
     window.location.href = "/register";
   };
@@ -45,6 +51,11 @@ const UserLogin = (props) => {
             toast.error(response.data.EM)
         }
   }
+  const handleEnter = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin()
+    }
+  }
   return (
     <div className="login-container">
       <div className="container">
@@ -68,6 +79,7 @@ const UserLogin = (props) => {
               placeholder="Password"
               value={password}
               onChange={(event) => {setPassword(event.target.value)}}
+              onKeyDown={handleEnter}
             />
             <button className="btn btn-primary btn-lg" onClick={handleLogin}>Login</button>
             <span className="text-center">

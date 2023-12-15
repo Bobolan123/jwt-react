@@ -9,11 +9,11 @@ function Navigate(props) {
         <NavLink activeClassName="active" to="/" exact>
           Home
         </NavLink>
-        <NavLink activeClassName="active" to="/news">
-          News
+        <NavLink activeClassName="active" to="/users">
+          Users
         </NavLink>
-        <NavLink activeClassName="active" to="/contact">
-          Contact
+        <NavLink activeClassName="active" to="/projects">
+          Projects
         </NavLink>
         <NavLink activeClassName="active" to="/about">
           About

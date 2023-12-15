@@ -13,4 +13,15 @@ const loginUser = (username, password) => {
       })
 }
 
-export {registerNewUser, loginUser}
+const fetAllUsers = (page, limit) => {
+  return axios.get(`http://localhost:3001/api/user/read?page=${page}&limit=${limit}`)
+}
+
+const deleteUser = (user) => {
+  return axios.delete(`http://localhost:3001/api/user/delete`, {data:{id:user.id}})
+}
+
+const fetchGroup = (user) => {
+  return axios.get(`http://localhost:3001/api/group/read`)
+}
+export {registerNewUser, loginUser, fetAllUsers, deleteUser, fetchGroup}

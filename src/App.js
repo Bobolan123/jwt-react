@@ -1,37 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import Navigate from "./components/Nav/Nav.js";
-import News from "./components/News.js";
-import About from "./components/About.js";
-import Contact from "./components/Contact.js";
 import UserLogin from "./components/Login/Login.js";
 import Home from "./components/Home.js";
 import Register from "./components/register/Register.js";
 import { ToastContainer } from "react-toastify";
 import Users from "./components/ManageUsers/Users.js";
+import { PrivateRoute } from "./components/routes/PrivateRoute.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate></Navigate>,
-    children: [
-      {
-        path: "",
-        element: <Home />,
-      },
-      {
-        path: "news",
-        element: <News />,
-      },
-      {
-        path: "contact",
-        element: <Contact />,
-      },
-      {
-        path: "about",
-        element: <News />,
-      },
-    ],
   },
   {
     path: "/login",
@@ -43,19 +23,22 @@ const router = createBrowserRouter([
   },
   {
     path: "/users",
-    element: <Users />,
+    element: <PrivateRoute><Users /></PrivateRoute>,
+  },
+  {
+    path: "/projects",
+    element: <PrivateRoute><Users /></PrivateRoute>,
   },
 ]);
 
 function App() {
-  const [account, setAccount] = useState({})
-  useEffect(() => {
-    let session = sessionStorage.getItem("account");
-    if (session) {
-      setAccount(JSON.parse(session))
-    }
-
-  })
+  // const [account, setAccount] = useState({})
+  // useEffect(() => {
+  //   let session = sessionStorage.getItem("account");
+  //   if (session) {
+  //     setAccount(JSON.parse(session))
+  //   }
+  // })
   return (
     <div className="app-container">
       <RouterProvider router={router} />
