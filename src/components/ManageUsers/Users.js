@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 import Navigate from "../Nav/Nav";
-import { fetAllUsers,deleteUser } from "../../services/userService";
+import { fetAllUsers, deleteUser } from "../../services/userService";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModelDelete from "./ModelDelete";
 import ModelUser from "./ModalUser";
-import "./Users.scss"
+import "./Users.scss";
 
 const Users = (props) => {
   const [listUser, setListUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentLimit, setCurrentLimit] = useState(2);
   const [totalPages, setTotalPages] = useState(0);
-  const [isShowedModelDelete, setIsShowedModelDelete] = useState(false)
-const [dataModel, setDataModel] = useState({})
+  //model delete
+  const [isShowedModelDelete, setIsShowedModelDelete] = useState(false);
+  const [dataModel, setDataModel] = useState({});
+
+  //model update/create user
+  const [isShowModelUser, setIsShowModelUser] = useState(false);
+  const [actionModelUser, setActionModelUser] = useState("CREATE");
+  const [dataModelUser, setDataModelUser] = useState({});
+
   useEffect(() => {
     fetchUsers();
   }, [currentPage]);
@@ -21,36 +28,49 @@ const [dataModel, setDataModel] = useState({})
   const fetchUsers = async () => {
     let response = await fetAllUsers(currentPage, currentLimit);
     if (response && response.data && response.data.EC === 0) {
-      setTotalPages(response.data.DT.totalPages)
-        setListUser(response.data.DT.users);
-
+      setTotalPages(response.data.DT.totalPages);
+      setListUser(response.data.DT.users);
     }
   };
 
   const handlePageClick = (event) => {
-    setCurrentPage(+event.selected+1)
+    setCurrentPage(+event.selected + 1);
   };
 
   const handleDeleteUser = async (user) => {
-    setDataModel(user)
-    setIsShowedModelDelete(true)
-  }
+    setDataModel(user);
+    setIsShowedModelDelete(true);
+  };
 
   const handleClose = () => {
-    setIsShowedModelDelete(false)
-    setDataModel({})
-  }
+    setIsShowedModelDelete(false);
+    setDataModel({});
+  };
   const confirmDeleteUser = async () => {
-    let response = await deleteUser(dataModel)
-    console.log(response)
+    let response = await deleteUser(dataModel);
+    console.log(response);
     if (response && response.data.EC === 0) {
-        toast.success(response.data.EM)
-        await fetchUsers()
-        setIsShowedModelDelete(false)
-    } else{
-        toast.error(response.data.EM)
+      toast.success(response.data.EM);
+      await fetchUsers();
+      setIsShowedModelDelete(false);
+    } else {
+      toast.error(response.data.EM);
     }
-  }
+  };
+  const onHideModelUser = async () => {
+    setDataModel({})
+    setIsShowModelUser(false);
+    await fetchUsers()
+  };
+
+  const handleEditUser = (user) => {
+    setActionModelUser("UPDATE");
+    setIsShowedModelDelete(false);
+    setDataModel({});
+
+    setDataModelUser(user);
+    setIsShowModelUser(true);
+  };
   return (
     <>
       <Navigate></Navigate>
@@ -62,7 +82,15 @@ const [dataModel, setDataModel] = useState({})
             </div>
             <div className="action">
               <button className="btn btn-success">Refresh</button>
-              <button className="btn btn-primary">Add new user</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setIsShowModelUser(true);
+                  setActionModelUser("CREATE");
+                }}
+              >
+                Add new user
+              </button>
             </div>
           </div>
           <div className="user-body">
@@ -82,15 +110,31 @@ const [dataModel, setDataModel] = useState({})
                     {listUser.map((item, index) => {
                       return (
                         <tr key={`row-${index}`}>
-                          <td>{index + 1}</td>
+                          <td>
+                            {(currentPage - 1) * currentLimit + index + 1}
+                          </td>
                           <td>{item.id}</td>
                           <td>{item.email}</td>
                           <td>{item.username}</td>
                           <td>{item.groupId || "null"}</td>
                           <td>
-                          <button className="btn btn-warning mx-2">edit</button>
-                          <button className="btn btn-danger" onClick={() => {handleDeleteUser(item)}}>delete</button>
-                            </td>
+                            <button
+                              className="btn btn-warning mx-2"
+                              onClick={() => {
+                                handleEditUser(item);
+                              }}
+                            >
+                              edit
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                handleDeleteUser(item);
+                              }}
+                            >
+                              delete
+                            </button>
+                          </td>
                         </tr>
                       );
                     })}
@@ -133,13 +177,16 @@ const [dataModel, setDataModel] = useState({})
       </div>
 
       <ModelDelete
-        show = {isShowedModelDelete}
-        handleClose = {handleClose}
-        confirmDeleteUser ={confirmDeleteUser}
+        show={isShowedModelDelete}
+        handleClose={handleClose}
+        confirmDeleteUser={confirmDeleteUser}
         dataModel={dataModel}
       />
-      <ModelUser  
-        title = {'Create new user'}
+      <ModelUser
+        onHide={onHideModelUser}
+        show={isShowModelUser}
+        action={actionModelUser}
+        dataModelUser={dataModelUser}
       />
     </>
   );
