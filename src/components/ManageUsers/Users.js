@@ -7,6 +7,7 @@ import ModelDelete from "./ModelDelete";
 import ModelUser from "./ModalUser";
 import "./Users.scss";
 
+
 const Users = (props) => {
   const [listUser, setListUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,9 +28,9 @@ const Users = (props) => {
 
   const fetchUsers = async () => {
     let response = await fetAllUsers(currentPage, currentLimit);
-    if (response && response.data && response.data.EC === 0) {
-      setTotalPages(response.data.DT.totalPages);
-      setListUser(response.data.DT.users);
+    if (response && response.EC === 0) {
+      setTotalPages(response.DT.totalPages);
+      setListUser(response.DT.users);
     }
   };
 
@@ -48,13 +49,12 @@ const Users = (props) => {
   };
   const confirmDeleteUser = async () => {
     let response = await deleteUser(dataModel);
-    console.log(response);
-    if (response && response.data.EC === 0) {
-      toast.success(response.data.EM);
+    if (response && response.EC === 0) {
+      toast.success(response.EM);
       await fetchUsers();
       setIsShowedModelDelete(false);
     } else {
-      toast.error(response.data.EM);
+      toast.error(response.EM);
     }
   };
   const onHideModelUser = async () => {
@@ -116,7 +116,7 @@ const Users = (props) => {
                           <td>{item.id}</td>
                           <td>{item.email}</td>
                           <td>{item.username}</td>
-                          <td>{item.groupId || "null"}</td>
+                          <td>{item.Group? item.Group.name : ''}</td>
                           <td>
                             <button
                               className="btn btn-warning mx-2"

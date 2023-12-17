@@ -1,5 +1,5 @@
-import axios from "axios"
-
+// import axios from "axios"
+import axios from "../setup/axios"
 
 const registerNewUser = (email, phone, username, password) => {
     return axios.post('http://localhost:3001/api/register', {
