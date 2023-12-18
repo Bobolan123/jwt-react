@@ -65,16 +65,13 @@ const Register = (props) => {
         toast.success("wow so easy")
         let check = isValidInput()
         if (check === true) {
-            let response =  await registerNewUser(email, phone, userName, password)
-            let serverData = response.data
+            let serverData =  await registerNewUser(email, phone, userName, password)
             if (+serverData.EC === 0) {
                 toast.success(serverData.EM)
                 window.location.href="/login"
             } else {
                 toast.error(serverData.EM)
             }
-
-            console.log(response)
         }
         
     }
