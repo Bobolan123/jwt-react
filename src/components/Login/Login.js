@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./Login.scss";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
+import { UserContext } from "../../context/UserContextHook";
+
 
 const UserLogin = (props) => {
-    useEffect(() => {
-      let session = sessionStorage.getItem("account");
-      if (session) {
-        window.location.href="/users"
-      }
-    }, [])
+  const {loginContext, user} = useContext(UserContext)
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      window.location.href = "/users";
+    }
+  }, []);
   const handleCreateNewAccount = () => {
     window.location.href = "/register";
   };
@@ -18,44 +21,54 @@ const UserLogin = (props) => {
   const [password, setPassword] = useState("");
 
   const defaultObjectValidInput = {
-    isValidInput:true,
-    isValidPassword:true
-  }
-  const [objectValidInput, setObjectValidInput] = useState(defaultObjectValidInput)
+    isValidInput: true,
+    isValidPassword: true,
+  };
+  const [objectValidInput, setObjectValidInput] = useState(
+    defaultObjectValidInput
+  );
   const handleLogin = async () => {
-        setObjectValidInput(defaultObjectValidInput)
-        if (!valLogin) {
-            setObjectValidInput({...defaultObjectValidInput, isValidInput:false})
-            toast.error("enter email address or phone number")
-            return
-        } 
-        if (!password) {
-            setObjectValidInput({...defaultObjectValidInput, isValidPassword:false})
-            toast.error("enter password")
-            return
-        } 
-
-        let response = await loginUser(valLogin, password)
-        if (response && +response.EC === 0) {
-            let data = {
-                isAuthenticated:true,
-                token: "fake token"
-            }
-            sessionStorage.setItem("account", JSON.stringify(data));
-            //success
-            window.location.href="/users"
-
-        }
-        if (response && +response.EC !== 0) {
-            //success
-            toast.error(response.EM)
-        }
-  }
-  const handleEnter = (event) => {
-    if (event.key === 'Enter') {
-      handleLogin()
+    setObjectValidInput(defaultObjectValidInput);
+    if (!valLogin) {
+      setObjectValidInput({ ...defaultObjectValidInput, isValidInput: false });
+      toast.error("enter email address or phone number");
+      return;
     }
-  }
+    if (!password) {
+      setObjectValidInput({
+        ...defaultObjectValidInput,
+        isValidPassword: false,
+      });
+      toast.error("enter password");
+      return;
+    }
+
+    let response = await loginUser(valLogin, password);
+    if (response && +response.EC === 0) {
+      let groupWithRoles = response.DT.groupWithRoles;
+      let email = response.DT.email;
+      let username = response.DT.username;
+      let token = response.DT.access_token
+      let data = {
+        isAuthenticated: true,
+        token: token,
+        account: { groupWithRoles, email, username },
+      };
+      sessionStorage.setItem("account", JSON.stringify(data));
+      await loginContext(data)
+      //success
+      window.location.href = "/users";
+    }
+    if (response && +response.EC !== 0) {
+      //success
+      toast.error(response.EM);
+    }
+  };
+  const handleEnter = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  };
   return (
     <div className="login-container">
       <div className="container">
@@ -68,20 +81,34 @@ const UserLogin = (props) => {
             <div className="brand d-sm-none d-block text-center">Lan</div>
             <input
               type="text"
-              className= {objectValidInput.isValidInput? "form-control" : "form-control is-invalid"} 
+              className={
+                objectValidInput.isValidInput
+                  ? "form-control"
+                  : "form-control is-invalid"
+              }
               placeholder="Email or phone number"
               value={valLogin}
-              onChange={(event) => {setValLogin(event.target.value)}}
+              onChange={(event) => {
+                setValLogin(event.target.value);
+              }}
             />
             <input
               type="password"
-              className= {objectValidInput.isValidPassword? "form-control" : "form-control is-invalid"} 
+              className={
+                objectValidInput.isValidPassword
+                  ? "form-control"
+                  : "form-control is-invalid"
+              }
               placeholder="Password"
               value={password}
-              onChange={(event) => {setPassword(event.target.value)}}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
               onKeyDown={handleEnter}
             />
-            <button className="btn btn-primary btn-lg" onClick={handleLogin}>Login</button>
+            <button className="btn btn-primary btn-lg" onClick={handleLogin}>
+              Login
+            </button>
             <span className="text-center">
               <a href="#" className="forget-password">
                 Forgot your password?
