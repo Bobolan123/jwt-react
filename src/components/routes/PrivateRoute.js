@@ -1,14 +1,15 @@
-import { Navigate } from "react-router-dom";
-import { UserContext } from "../../context/UserContextHook";
-import { useContext } from "react";
+  import { Navigate } from "react-router-dom";
+  import { UserContext } from "../../context/UserContextHook";
+  import { useContext, useEffect } from "react";
 
-export const PrivateRoute = ({ children }) => {
-  const isAuthenticated = sessionStorage.getItem("account");
-  const {user} = useContext(UserContext)
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-  if (isAuthenticated) {
-    return <>{children}</>; // Use {} to render the children component
-  }
-};
+  const PrivateRoute = ({ children }) => {
+    const { user } = useContext(UserContext); 
+    if (user && user.isAuthenticated === true) {
+      return <>{children}</>; // Use {} to render the children component
+    } else {
+      return <Navigate to="/login" />;
+    }
+
+  };
+
+  export default PrivateRoute

@@ -10,7 +10,7 @@ const registerNewUser = (email, phone, username, password) => {
 const loginUser = (username, password) => {
     return axios.post('http://localhost:3001/api/login', {
         username, password
-      })
+      })  
 }
 
 const fetAllUsers = (page, limit) => {
@@ -28,4 +28,9 @@ const fetchGroup = (user) => {
 const createNewUser = (userData) => {
   return axios.post('http://localhost:3001/api/user/create', {...userData})
 }
-export {registerNewUser, loginUser, fetAllUsers, deleteUser, fetchGroup, createNewUser}
+
+const getUserAccount = () => {
+  return axios.get(`http://localhost:3001/api/account`)
+
+}
+export {registerNewUser, loginUser, fetAllUsers, deleteUser, fetchGroup, createNewUser, getUserAccount}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navigate from "../Nav/Nav";
 import { fetAllUsers, deleteUser } from "../../services/userService";
 import ReactPaginate from "react-paginate";

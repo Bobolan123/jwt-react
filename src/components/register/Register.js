@@ -4,8 +4,10 @@ import axios from 'axios'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { registerNewUser } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 const Register = (props) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [userName, setUsername] = useState("")
@@ -19,14 +21,8 @@ const Register = (props) => {
     }
     const [checkInput, setCheckInput] = useState(defaultValidInput)
     const handleLogin = () => {
-        window.location.href="/login"
+        navigate('/login');
     }
-
-    useEffect(() => {
-        // axios.get("http://localhost:3001/api/test-api").then(data => {
-        //     console.log("Check data >>>", data)
-        // })
-    }, [])
 
     const isValidInput = () => {
         setCheckInput(defaultValidInput)
@@ -68,7 +64,7 @@ const Register = (props) => {
             let serverData =  await registerNewUser(email, phone, userName, password)
             if (+serverData.EC === 0) {
                 toast.success(serverData.EM)
-                window.location.href="/login"
+                navigate('/login');
             } else {
                 toast.error(serverData.EM)
             }

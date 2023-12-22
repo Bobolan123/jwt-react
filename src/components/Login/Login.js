@@ -3,18 +3,20 @@ import "./Login.scss";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { UserContext } from "../../context/UserContextHook";
+import { useNavigate } from 'react-router-dom';
 
 
 const UserLogin = (props) => {
+  const navigate = useNavigate();
   const {loginContext, user} = useContext(UserContext)
+
   useEffect(() => {
-    let session = sessionStorage.getItem("account");
-    if (session) {
-      window.location.href = "/users";
+    if (user && user.isAuthenticated === true) {
+      // navigate('/users');
     }
   }, []);
   const handleCreateNewAccount = () => {
-    window.location.href = "/register";
+    navigate('/register');
   };
 
   const [valLogin, setValLogin] = useState("");
@@ -42,8 +44,8 @@ const UserLogin = (props) => {
       toast.error("enter password");
       return;
     }
-
     let response = await loginUser(valLogin, password);
+    console.log(response)
     if (response && +response.EC === 0) {
       let groupWithRoles = response.DT.groupWithRoles;
       let email = response.DT.email;
@@ -54,13 +56,10 @@ const UserLogin = (props) => {
         token: token,
         account: { groupWithRoles, email, username },
       };
-      sessionStorage.setItem("account", JSON.stringify(data));
-      await loginContext(data)
-      //success
-      window.location.href = "/users";
+      loginContext(data) 
+      navigate('/users');
     }
     if (response && +response.EC !== 0) {
-      //success
       toast.error(response.EM);
     }
   };
